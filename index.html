@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="src/includes/js.cookie-2.2.0.min.js"></script>
+        <script src="src/includes/ncmb.min.js"></script>
+
+        <script src="build/tsc.js"></script>
+    </head>
+    <body>
+        <h1>Blue Spoon</h1>
+
+        <h2>Book list</h2>
+
+        <output id="book_list">
+
+        </output>
+
+        <button onclick="userUpdateBookList()">Reload book list</button>
+
+        <button onclick="makeBookListInstance(`SomeBook`).save()">Add book list</button>
+    </body>
+</html>
