@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Blue spoon</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <link rel="stylesheet" href="../target/concat.css"></link>
+
+        <link href="https://unpkg.com/cirrus-ui" type="text/css" rel="stylesheet" />
+
+        <script src="../src/includes/js.cookie-2.2.0.min.js"></script>
+        <script src="../src/includes/ncmb.min.js"></script>
+
+        <script src="../target/tsc.js"></script>
+
+        <script text="text/javascript">
+            window.onload = function(){
+                userInitNCMB();
+                userInitBookName();
+                userSetBookNameToElement();
+            }
+        </script>
+    </head>
+    <body>
+        <h1 class="title">Blue Spoon</h1>
+
+        <h2 id="book_name_content"></h2>
+
+        <div id="book_control_content" style="display: inline;">
+            <button class="btn" onclick="QuizDialog.Enabled()">Solve</button>
+            <button class="btn">Delete</button>
+        </div>
+
+        <div id="quiz_dialog_content" style="display: none;">
+            <p id="problem_content"></p>
+
+            <p id="correct_rate_content"></p>
+
+            <button id="show_answer_content" class="btn" onclick="QuizDialog.ShowAnswer()">Show the answer</button>
+
+            <div id="answer_group" style="display: none;">
+                <p id="answer_content"></p>
+
+                <button class="btn" onclick="QuizDialog.Event.OnCorrectButtonClicked()">Correct</button>
+                <button class="btn" onclick="QuizDialog.Event.OnIncorrectButtonClicked()">Incorrect</button>
+            </div>
+        </div>
+
+        <div id="quiz_result_group" style="display: none;">
+            <p id="show_result_content"></p>
+        </div>
+    </body>
+</html>

@@ -1,3 +1,5 @@
+declare var Cookies: ICookieControl;
+
 interface ICookieControl{
     set(tag: string, val: string): void;
     get(tag: string): string;

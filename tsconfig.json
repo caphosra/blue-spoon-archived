@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "strict": true,
-        "outFile": "build/tsc.js",
+        "outFile": "target/tsc.js",
         "target": "es6"
     },
     "include": [
