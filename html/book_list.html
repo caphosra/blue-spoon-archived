@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Blue spoon</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <link rel="stylesheet" href="../target/concat.css"></link>
+
+        <link href="https://unpkg.com/cirrus-ui" type="text/css" rel="stylesheet" />
+
+        <script src="../src/includes/js.cookie-2.2.0.min.js"></script>
+        <script src="../src/includes/ncmb.min.js"></script>
+
+        <script src="../target/tsc.js"></script>
+
+        <script text="text/javascript">
+            window.onload = function() {
+                userInitNCMB();
+                userUpdateBookList();
+            };
+        </script>
+    </head>
+
+    <body>
+        <h1>Blue Spoon</h1>
+
+        <h2>Book list</h2>
+
+        <output id="book_list">
+            <!-- Output the book list here -->
+        </output>
+
+        <button class="btn" onclick="userUpdateBookList()">Reload book list</button>
+
+        <button class="btn" onclick="userMakeBook()">Add book list</button>
+    </body>
+</html>

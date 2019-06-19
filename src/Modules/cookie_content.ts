@@ -1,4 +1,4 @@
-class CookieContent{
+class SettingsContent{
     APIKey: string;
     ClientKey: string;
 

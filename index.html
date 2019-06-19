@@ -1,22 +1,32 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script src="src/includes/js.cookie-2.2.0.min.js"></script>
-        <script src="src/includes/ncmb.min.js"></script>
+        <meta charset="UTF-8" />
+        <title>Blue spoon</title>
 
-        <script src="build/tsc.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <link rel="stylesheet" href="./target/concat.css"></link>
+
+        <link href="https://unpkg.com/cirrus-ui" type="text/css" rel="stylesheet" />
+
+        <script src="./src/includes/js.cookie-2.2.0.min.js"></script>
+        <script src="./src/includes/ncmb.min.js"></script>
+
+        <script src="./target/tsc.js"></script>
     </head>
+
     <body>
         <h1>Blue Spoon</h1>
 
-        <h2>Book list</h2>
+        <h2>Open Application</h2>
 
-        <output id="book_list">
+        <form action="./html/book_list.html" method="GET">
+            <label for="ak">App Key</label>
+            <input name="ak" type="text" placeholder="Input your app key"/>
+            <label for="ck">Clinet Key</label>
+            <input name="ck" type="text" placeholder="Input your client key"/>
 
-        </output>
-
-        <button onclick="userUpdateBookList()">Reload book list</button>
-
-        <button onclick="makeBookListInstance(`SomeBook`).save()">Add book list</button>
+            <input class="btn" type="submit" value="Run"/>
+        </form>
     </body>
 </html>

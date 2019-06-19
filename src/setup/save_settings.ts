@@ -1,7 +1,5 @@
-function saveSettings(content: CookieContent){
-    const cookie = eval("Cookies") as ICookieControl;
+function saveSettings(content: SettingsContent){
+    let json = JSON.stringify(content);
 
-    var json = JSON.stringify(content);
-
-    cookie.set("bluespoon_setting", json);
+    Cookies.set("bluespoon_setting", json);
 }
