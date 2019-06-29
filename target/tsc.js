@@ -79,6 +79,7 @@ var QuizDialog;
 (function (QuizDialog) {
     const control_element_id = "book_control_content";
     const quiz_element_id = "quiz_dialog_content";
+    const problem_counter_element_id = "problem_counter_content";
     const problem_element_id = "problem_content";
     const correct_rate_element_id = "correct_rate_content";
     const answer_group_element_id = "answer_group";
@@ -87,6 +88,7 @@ var QuizDialog;
     const show_result_content_id = "show_result_content";
     QuizDialog.correct_count = 0;
     QuizDialog.incorrect_count = 0;
+    let problem_count;
     /**
      * Show the quiz dialog.
      *
@@ -101,6 +103,7 @@ var QuizDialog;
                 EnableElement(quiz_element);
                 InitVariables();
                 yield GetProblems();
+                problem_count = QuizDialog.problems.length;
                 GoToNextProblem();
             }
             else {
@@ -155,11 +158,14 @@ var QuizDialog;
      * @param {IBookContent} content problem
      */
     function ShowProblem(content) {
+        let problem_counter_element = document.getElementById(problem_counter_element_id);
         let problem_element = document.getElementById(problem_element_id);
         let correct_rate_element = document.getElementById(correct_rate_element_id);
         let answer_group_element = document.getElementById(answer_group_element_id);
         let answer_element = document.getElementById(answer_element_id);
-        if (problem_element && correct_rate_element && answer_group_element && answer_element) {
+        if (problem_counter_element && problem_element && correct_rate_element && answer_group_element && answer_element) {
+            let current_problem_number = QuizDialog.correct_count + QuizDialog.incorrect_count + 1;
+            problem_counter_element.innerHTML = `${current_problem_number}/${problem_count}`;
             problem_element.innerHTML = content.problem;
             correct_rate_element.innerHTML = `Correct Rate : ${GetCorrectRate(content.correct, content.incorrect)}%`;
             DisableElement(answer_group_element);
