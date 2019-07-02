@@ -1,0 +1,25 @@
+# Publish GitHub Pages
+
+trigger:
+  branches:
+    include:
+      - master
+      - refs/tags/*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  nodeToolVersion: '12.5.0'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: ${nodeToolVersion}
+  displayName: 'Install node js'
+
+- script: npm install -g typescript
+  displayName: 'Install typescript compiler'
+
+- script: tsc
+  displayName: 'Compile typescript codes'
