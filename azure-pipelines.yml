@@ -11,6 +11,13 @@ pool:
 
 variables:
   nodeToolVersion: '12.5.0'
+  outFile: 'target'
+  isBuild: |
+    and(
+      ne(variables['Build.Reason'], 'PullRequest'), 
+      ne(variables['Build.SourceBranch'], 'refs/heads/master'),
+      contains(variables['Build.SourceBranch'], 'refs/tags')
+    )
 
 steps:
 - task: NodeTool@0
@@ -23,3 +30,33 @@ steps:
 
 - script: tsc
   displayName: 'Compile typescript codes'
+
+- script: ./tools/bake.sh
+  displayName: 'Bake files'
+
+- script: |
+    pushd target
+    git init
+    git config --local user.name "Bluespoon Bot"
+    git config --local user.email "bluespoonbot@capra314cabra.github.io"
+    git add .
+    git commit -m "Publishing GitHub Pages from $(Build.SourceBranch) ***NO_CI***"
+    popd
+  displayName: 'Commit compiled changes'
+  condition: $(isBuild)
+    
+
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: bs_github_rsa
+  displayName: 'Get the deploy key'
+  condition: $(isBuild)
+
+- script: |
+    mkdir ~/.ssh && mv $DOWNLOADSECUREFILE_SECUREFILEPATH ~/.ssh/id_rsa
+    chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa
+    ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+    git remote origin git@github.com:capra314cabra/blue-spoon.git
+    git push origin gh-pages
+  displayName: 'Publish all'
+  condition: $(isBuild)
