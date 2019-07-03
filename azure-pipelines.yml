@@ -12,12 +12,6 @@ pool:
 variables:
   nodeToolVersion: '12.5.0'
   outFile: 'target'
-  isBuild: |
-    and(
-      ne(variables['Build.Reason'], 'PullRequest'), 
-      ne(variables['Build.SourceBranch'], 'refs/heads/master'),
-      contains(variables['Build.SourceBranch'], 'refs/tags')
-    )
 
 steps:
 - task: NodeTool@0
@@ -43,14 +37,24 @@ steps:
     git commit -m "Publishing GitHub Pages from $(Build.SourceBranch) ***NO_CI***"
     popd
   displayName: 'Commit compiled changes'
-  condition: $(isBuild)
+  condition: |
+    and(
+      ne(variables['Build.Reason'], 'PullRequest'), 
+      ne(variables['Build.SourceBranch'], 'refs/heads/master'),
+      contains(variables['Build.SourceBranch'], 'refs/tags')
+    )
     
 
 - task: DownloadSecureFile@1
   inputs:
     secureFile: bs_github_rsa
   displayName: 'Get the deploy key'
-  condition: $(isBuild)
+  condition: |
+    and(
+      ne(variables['Build.Reason'], 'PullRequest'), 
+      ne(variables['Build.SourceBranch'], 'refs/heads/master'),
+      contains(variables['Build.SourceBranch'], 'refs/tags')
+    )
 
 - script: |
     mkdir ~/.ssh && mv $DOWNLOADSECUREFILE_SECUREFILEPATH ~/.ssh/id_rsa
@@ -59,4 +63,9 @@ steps:
     git remote origin git@github.com:capra314cabra/blue-spoon.git
     git push origin gh-pages
   displayName: 'Publish all'
-  condition: $(isBuild)
+  condition: |
+    and(
+      ne(variables['Build.Reason'], 'PullRequest'), 
+      ne(variables['Build.SourceBranch'], 'refs/heads/master'),
+      contains(variables['Build.SourceBranch'], 'refs/tags')
+    )
