@@ -25,7 +25,11 @@ steps:
 - script: tsc
   displayName: 'Compile typescript codes'
 
-- script: ./tools/bake.sh
+- script: |
+    pushd tools
+    chmod +x bake.sh
+    popd
+    ./tools/bake.sh
   displayName: 'Bake files'
 
 - script: |
