@@ -55,7 +55,7 @@ steps:
     mkdir ~/.ssh && mv $DOWNLOADSECUREFILE_SECUREFILEPATH ~/.ssh/id_rsa
     chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa
     ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
-    git remote add origin git@github.com:capra314cabra/blue-spoon.git
-    git push origin gh-pages
+    git remote set-url --add --push origin git@github.com:capra314cabra/blue-spoon.git
+    git push origin master:gh-pages
   displayName: 'Publish all'
   condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
