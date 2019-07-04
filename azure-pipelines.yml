@@ -18,6 +18,7 @@ steps:
     mkdir ~/.ssh && mv $DOWNLOADSECUREFILE_SECUREFILEPATH ~/.ssh/id_rsa
     chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa
     ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+    mkdir target
     pushd target > /dev/null
     git clone git@github.com:capra314cabra/blue-spoon.git .
     git checkout gh-pages
