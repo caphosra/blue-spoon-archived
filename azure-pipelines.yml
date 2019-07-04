@@ -25,36 +25,31 @@ steps:
 - script: tsc
   displayName: 'Compile typescript codes'
 
-- script: ./tools/bake.sh
+- script: |
+    pushd tools
+    chmod +x bake.sh
+    popd
+    ./tools/bake.sh
   displayName: 'Bake files'
 
 - script: |
-    pushd target
+    pushd target > /dev/null
+    pwd
     git init
     git config --local user.name "Bluespoon Bot"
     git config --local user.email "bluespoonbot@capra314cabra.github.io"
     git add .
     git commit -m "Publishing GitHub Pages from $(Build.SourceBranch) ***NO_CI***"
-    popd
+    popd > /dev/null
   displayName: 'Commit compiled changes'
-  condition: |
-    and(
-      ne(variables['Build.Reason'], 'PullRequest'), 
-      ne(variables['Build.SourceBranch'], 'refs/heads/master'),
-      contains(variables['Build.SourceBranch'], 'refs/tags')
-    )
+  condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
     
 
 - task: DownloadSecureFile@1
   inputs:
     secureFile: bs_github_rsa
   displayName: 'Get the deploy key'
-  condition: |
-    and(
-      ne(variables['Build.Reason'], 'PullRequest'), 
-      ne(variables['Build.SourceBranch'], 'refs/heads/master'),
-      contains(variables['Build.SourceBranch'], 'refs/tags')
-    )
+  condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
 
 - script: |
     mkdir ~/.ssh && mv $DOWNLOADSECUREFILE_SECUREFILEPATH ~/.ssh/id_rsa
@@ -63,9 +58,4 @@ steps:
     git remote origin git@github.com:capra314cabra/blue-spoon.git
     git push origin gh-pages
   displayName: 'Publish all'
-  condition: |
-    and(
-      ne(variables['Build.Reason'], 'PullRequest'), 
-      ne(variables['Build.SourceBranch'], 'refs/heads/master'),
-      contains(variables['Build.SourceBranch'], 'refs/tags')
-    )
+  condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
