@@ -56,6 +56,6 @@ steps:
     chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa
     ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
     git remote set-url --add --push origin git@github.com:capra314cabra/blue-spoon.git
-    git push origin master:gh-pages
+    git push origin HEAD:gh-pages
   displayName: 'Publish all'
   condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
