@@ -26,9 +26,9 @@ steps:
   displayName: 'Compile typescript codes'
 
 - script: |
-    pushd tools
+    pushd tools > /dev/null
     chmod +x bake.sh
-    popd
+    popd > /dev/null
     ./tools/bake.sh
   displayName: 'Bake files'
 
@@ -55,7 +55,9 @@ steps:
     mkdir ~/.ssh && mv $DOWNLOADSECUREFILE_SECUREFILEPATH ~/.ssh/id_rsa
     chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa
     ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+    pushd target > /dev/null
     git remote set-url --add --push origin git@github.com:capra314cabra/blue-spoon.git
     git push origin HEAD:gh-pages
+    popd > /dev/null
   displayName: 'Publish all'
   condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
