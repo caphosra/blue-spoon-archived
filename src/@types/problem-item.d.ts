@@ -1,4 +1,4 @@
-interface IProblemItem extends IDataTable{
+interface IProblemItem extends INCMBDataItem{
     problem: string;
     answer: string;
 
