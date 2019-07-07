@@ -7,74 +7,216 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-class SettingsContent {
-    constructor(APIKey, clientKey) {
-        this.APIKey = APIKey;
-        this.ClientKey = clientKey;
+var OnLoadWrap;
+(function (OnLoadWrap) {
+    let functions = [];
+    function AddToOnLoad(func) {
+        functions.push(func);
+        window.onload = OnLoadFunc;
     }
-}
+    OnLoadWrap.AddToOnLoad = AddToOnLoad;
+    function AddToOnLoadIf(filename, func) {
+        if (PageLocation.GetCurrentFile() == filename) {
+            AddToOnLoad(func);
+        }
+    }
+    OnLoadWrap.AddToOnLoadIf = AddToOnLoadIf;
+    function OnLoadFunc() {
+        for (let func of functions) {
+            func();
+        }
+    }
+})(OnLoadWrap || (OnLoadWrap = {}));
+var NCMBWrap;
+(function (NCMBWrap) {
+    let ncmbInstance;
+    function DataStore(name) {
+        return ncmbInstance.DataStore(name);
+    }
+    NCMBWrap.DataStore = DataStore;
+    function CreateNewData(name) {
+        let GeneratedClass = ncmbInstance.DataStore(name);
+        return new GeneratedClass();
+    }
+    NCMBWrap.CreateNewData = CreateNewData;
+    function Initalize() {
+        InitKeysFromQuery();
+        if (NCMBWrap.API_key && NCMBWrap.client_key) {
+            ncmbInstance = new NCMB(NCMBWrap.API_key, NCMBWrap.client_key);
+            return ncmbInstance;
+        }
+        InitKeysFromCookie();
+        if (NCMBWrap.API_key && NCMBWrap.client_key) {
+            ncmbInstance = new NCMB(NCMBWrap.API_key, NCMBWrap.client_key);
+            return ncmbInstance;
+        }
+        PageLocation.JumpToPageWithoutInfo(PageLocation.cannnot_connect);
+        throw new TypeError("COULDN'T FIND AN APP KEY AND AN CLIENT KEY !");
+    }
+    NCMBWrap.Initalize = Initalize;
+    function InitKeysFromQuery() {
+        let params = HTMLQuery.GetParams();
+        NCMBWrap.API_key = params["ak"];
+        NCMBWrap.client_key = params["ck"];
+    }
+    function InitKeysFromCookie() {
+        NCMBWrap.API_key = Cookies.get("bs_apikey");
+        NCMBWrap.client_key = Cookies.get("bs_clientkey");
+    }
+})(NCMBWrap || (NCMBWrap = {}));
+OnLoadWrap.AddToOnLoad(NCMBWrap.Initalize);
 var ErrorMessages;
 (function (ErrorMessages) {
     ErrorMessages.element_not_found = "THERE ARE NO CONTENTS WHICH THIS JOB REQUIRES !";
     ErrorMessages.unexpected = "UNEXPECTED ERROR !";
 })(ErrorMessages || (ErrorMessages = {}));
-var global_book_name = undefined;
-function userInitBookName() {
-    let params = libGetParams();
-    let book_name = params["bn"];
-    if (!book_name) {
-        console.error("BOOK NAME IS NULL !");
-    }
-    else {
-        global_book_name = book_name;
-    }
-}
-function userSetBookNameToElement() {
-    let elem = document.getElementById("book_name_content");
-    if (elem && global_book_name) {
-        elem.innerHTML = global_book_name;
-    }
-}
-function userMakeBook() {
-    var book_name = window.prompt("Input your book name", "");
-    if (book_name) {
-        var bookList = makeBookListInstance(book_name);
-        if (bookList) {
-            bookList.save();
+var HTMLQuery;
+(function (HTMLQuery) {
+    let params = undefined;
+    function GetParams() {
+        if (params) {
+            return params;
         }
-    }
-    userUpdateBookList();
-}
-function userUpdateBookList() {
-    let bookListTable = getDataTable("BookList");
-    if (!bookListTable) {
-        return;
-    }
-    bookListTable.fetchAll()
-        .then(function (res) {
-        let tableElement = document.getElementById("book_list");
-        if (tableElement != null) {
-            tableElement.innerHTML = "";
-            for (let i = 0; i < res.length; i++) {
-                let bookItem = res[i];
-                tableElement.innerHTML += `<a href="#" onclick="userOpenBook('${bookItem.name}');">${bookItem.name}</a><br/>`;
+        params = {};
+        let query_text = location.search;
+        query_text = query_text.substring(1);
+        let query = query_text.split("&");
+        for (var q of query) {
+            let params_array = q.split("=");
+            if (params_array.length == 2) {
+                let param_name = params_array[0];
+                let param_value = params_array[1];
+                params[param_name] = param_value;
+            }
+            else {
+                console.error("PARAMS ARE BAD");
+                return params;
             }
         }
-    })
-        .catch(function (err) {
-        console.error(err);
-    });
-}
-function userOpenBook(book_name) {
-    location.href = `./book_item.html?ak=${appKey}&ck=${clientKey}&bn=${book_name}`;
-}
-var ncmb = undefined;
-function userInitNCMB() {
-    var ncmb = initalizeNCMB();
-    if (!ncmb) {
-        onCannotConnectToNCMB();
+        return params;
     }
-}
+    HTMLQuery.GetParams = GetParams;
+})(HTMLQuery || (HTMLQuery = {}));
+var PageLocation;
+(function (PageLocation) {
+    PageLocation.book_item = "./book_item.html";
+    PageLocation.book_list = "./book_list.html";
+    PageLocation.index = "./index.html";
+    PageLocation.cannnot_connect = "./cannnot_connect.html";
+    let current_file;
+    function GetCurrentFile() {
+        if (!current_file) {
+            let filename_with_query = window.location.pathname.split("/").pop();
+            if (filename_with_query) {
+                let file_name = filename_with_query.split("?").shift();
+                current_file = `./${file_name}`;
+            }
+        }
+        if (current_file) {
+            return current_file;
+        }
+        else {
+            throw new TypeError("CURRENT FILE NAME IS NULL !");
+        }
+    }
+    PageLocation.GetCurrentFile = GetCurrentFile;
+    function JumpToPage(url) {
+        location.href =
+            `${url}?ak=${NCMBWrap.API_key}&ck=${NCMBWrap.client_key}`;
+    }
+    PageLocation.JumpToPage = JumpToPage;
+    function JumpToPageWithBookName(url, book_name) {
+        location.href =
+            `${url}?ak=${NCMBWrap.API_key}&ck=${NCMBWrap.client_key}&bn=${book_name}`;
+    }
+    PageLocation.JumpToPageWithBookName = JumpToPageWithBookName;
+    function JumpToPageWithoutInfo(url) {
+        location.href = url;
+    }
+    PageLocation.JumpToPageWithoutInfo = JumpToPageWithoutInfo;
+})(PageLocation || (PageLocation = {}));
+var BookItem;
+(function (BookItem) {
+    BookItem.book_name = undefined;
+    function InitBookName() {
+        let params = HTMLQuery.GetParams();
+        BookItem.book_name = params["bn"];
+        if (!BookItem.book_name) {
+            console.error("BOOK NAME IS NULL !");
+        }
+    }
+    function SetBookNameToElement() {
+        let elem = document.getElementById("book_name_content");
+        if (elem && BookItem.book_name) {
+            elem.innerHTML = BookItem.book_name;
+        }
+    }
+    let Event;
+    (function (Event) {
+        function OnLoad() {
+            InitBookName();
+            SetBookNameToElement();
+        }
+        Event.OnLoad = OnLoad;
+    })(Event = BookItem.Event || (BookItem.Event = {}));
+})(BookItem || (BookItem = {}));
+OnLoadWrap.AddToOnLoadIf(PageLocation.book_item, BookItem.Event.OnLoad);
+var BookList;
+(function (BookList) {
+    const update_list_button_id = "update_list_button";
+    const add_book_button_id = "add_book_button";
+    function MakeBook() {
+        var book_name = window.prompt("Input your book name", "");
+        if (book_name) {
+            let newRecord = NCMBWrap.CreateNewData("BookList");
+            newRecord.name = book_name;
+            newRecord.save();
+        }
+        UpdateBookList();
+    }
+    BookList.MakeBook = MakeBook;
+    function UpdateBookList() {
+        let bookListTable = NCMBWrap.DataStore("BookList");
+        bookListTable.fetchAll()
+            .then(function (res) {
+            let tableElement = document.getElementById("book_list");
+            if (tableElement) {
+                tableElement.innerHTML = "";
+                for (let item of res) {
+                    let bookItem = item;
+                    let clickEvent = `PageLocation.JumpToPageWithBookName('${PageLocation.book_item}', '${bookItem.name}');`;
+                    tableElement.innerHTML += `<a href="#" name="book_item_link" onclick="${clickEvent}">${bookItem.name}</a><br/>`;
+                }
+            }
+        })
+            .catch(function (err) {
+            console.error(err);
+        });
+    }
+    BookList.UpdateBookList = UpdateBookList;
+    let Event;
+    (function (Event) {
+        function OnLoad() {
+            let update_list_button = document.getElementById(update_list_button_id);
+            if (update_list_button) {
+                update_list_button.onclick = OnUpdateListButtonClicked;
+            }
+            let add_book_button = document.getElementById(add_book_button_id);
+            if (add_book_button) {
+                add_book_button.onclick = OnAddBookButtonClicked;
+            }
+            UpdateBookList();
+        }
+        Event.OnLoad = OnLoad;
+        function OnUpdateListButtonClicked() {
+            UpdateBookList();
+        }
+        function OnAddBookButtonClicked() {
+            MakeBook();
+        }
+    })(Event = BookList.Event || (BookList.Event = {}));
+})(BookList || (BookList = {}));
+OnLoadWrap.AddToOnLoadIf(PageLocation.book_list, BookList.Event.OnLoad);
 var QuizDialog;
 (function (QuizDialog) {
     const control_element_id = "book_control_content";
@@ -89,11 +231,6 @@ var QuizDialog;
     QuizDialog.correct_count = 0;
     QuizDialog.incorrect_count = 0;
     let problem_count;
-    /**
-     * Show the quiz dialog.
-     *
-     * @export
-     */
     function Enabled() {
         return __awaiter(this, void 0, void 0, function* () {
             let control_element = document.getElementById(control_element_id);
@@ -112,11 +249,6 @@ var QuizDialog;
         });
     }
     QuizDialog.Enabled = Enabled;
-    /**
-     * Hide the quiz dialog.
-     *
-     * @export
-     */
     function Disabled() {
         let control_element = document.getElementById(control_element_id);
         let quiz_element = document.getElementById(quiz_element_id);
@@ -129,12 +261,6 @@ var QuizDialog;
         }
     }
     QuizDialog.Disabled = Disabled;
-    /**
-     * Show the problem to this dialog or results.
-     *
-     * @warning This function calls ShowProblem() internally.
-     * @export
-     */
     function GoToNextProblem() {
         if (QuizDialog.problems.length != 0) {
             let problem = QuizDialog.problems.shift();
@@ -151,12 +277,6 @@ var QuizDialog;
         }
     }
     QuizDialog.GoToNextProblem = GoToNextProblem;
-    /**
-     * Show the problem to this dialog.
-     *
-     * @export
-     * @param {IBookContent} content problem
-     */
     function ShowProblem(content) {
         let problem_counter_element = document.getElementById(problem_counter_element_id);
         let problem_element = document.getElementById(problem_element_id);
@@ -176,11 +296,6 @@ var QuizDialog;
         }
     }
     QuizDialog.ShowProblem = ShowProblem;
-    /**
-     * Show the answer.
-     *
-     * @export
-     */
     function ShowAnswer() {
         let answer_group_element = document.getElementById(answer_group_element_id);
         if (answer_group_element) {
@@ -191,11 +306,6 @@ var QuizDialog;
         }
     }
     QuizDialog.ShowAnswer = ShowAnswer;
-    /**
-     * Show results.
-     *
-     * @export
-     */
     function ShowResults() {
         let quiz_group_element = document.getElementById(quiz_element_id);
         let result_group = document.getElementById(result_group_element_id);
@@ -241,15 +351,12 @@ var QuizDialog;
     }
     function GetProblems() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (ncmb && global_book_name) {
-                let problemClass = ncmb.DataStore(global_book_name);
+            if (BookItem.book_name) {
+                let problemClass = NCMBWrap.DataStore(BookItem.book_name);
                 if (problemClass) {
                     yield problemClass.fetchAll()
                         .then(function (results) {
                         let original_problems = results;
-                        //
-                        // Suffle
-                        //
                         QuizDialog.problems = RandomSort.Do(original_problems);
                     })
                         .catch(function (err) {
@@ -266,57 +373,8 @@ var QuizDialog;
         element.style.display = "none";
     }
 })(QuizDialog || (QuizDialog = {}));
-class BookList {
-    constructor(data) {
-        this.name = "";
-        this.data = data;
-    }
-    save() {
-        this.data.set("name", this.name)
-            .save()
-            .then(function (data) {
-            console.log("Save Successfully");
-        })
-            .catch(function (err) {
-            console.error(err);
-        });
-    }
-    delete() {
-        this.data.delete()
-            .then(function (val) {
-            console.log("Delete Successfully");
-        })
-            .catch(function (err) {
-            console.error(err);
-        });
-    }
-}
-function getDataTable(name) {
-    if (ncmb != undefined) {
-        let dataTable = ncmb.DataStore(name);
-        return dataTable;
-    }
-    return undefined;
-}
-function makeDataTableInstance(name) {
-    if (ncmb != undefined) {
-        let SomeClass = ncmb.DataStore(name);
-        let dataTableInstance = new SomeClass();
-        return dataTableInstance;
-    }
-    return undefined;
-}
-function makeBookListInstance(bookName) {
-    let bookListData = makeDataTableInstance("BookList");
-    if (bookListData != undefined) {
-        let list = new BookList(bookListData);
-        list.name = bookName;
-        return list;
-    }
-    return undefined;
-}
 function getAllProblems(book_name) {
-    let dataTable = getDataTable(book_name);
+    let dataTable = NCMBWrap.DataStore(book_name);
     let allProblems = undefined;
     if (dataTable != undefined) {
         dataTable.fetchAll()
@@ -330,7 +388,7 @@ function getAllProblems(book_name) {
     return allProblems;
 }
 function addProblem(book_name, problem, answer) {
-    let dataTableItem = makeDataTableInstance(book_name);
+    let dataTableItem = NCMBWrap.CreateNewData(book_name);
     if (dataTableItem != undefined) {
         dataTableItem
             .set("problem", problem)
@@ -345,34 +403,6 @@ function addProblem(book_name, problem, answer) {
             console.error(err);
         });
     }
-}
-function libGetParams() {
-    let params = {};
-    let query_text = location.search;
-    query_text = query_text.substring(1);
-    let query = query_text.split("&");
-    for (var q of query) {
-        let params_array = q.split("=");
-        if (params_array.length == 2) {
-            let param_name = params_array[0];
-            let param_value = params_array[1];
-            params[param_name] = param_value;
-        }
-        else {
-            console.error("PARAMS ARE BAD");
-            return params;
-        }
-    }
-    return params;
-}
-function makeInstance(className, args) {
-    let args_str = "";
-    for (let index = 0; index < args.length; index++) {
-        if (index != 0)
-            args_str += ",";
-        args_str += `args[${index}]`;
-    }
-    return eval(`new ${className}(${args_str})`);
 }
 var RandomSort;
 (function (RandomSort) {
@@ -389,51 +419,3 @@ var RandomSort;
     }
     RandomSort.Do = Do;
 })(RandomSort || (RandomSort = {}));
-const CANNOT_CONNECT_HTML_PATH = "./cannot_connect.html";
-function onCannotConnectToNCMB() {
-    var result = window.confirm("Retry to connect NCMB ?");
-    if (result) {
-        location.reload(true);
-    }
-    else {
-        location.href = CANNOT_CONNECT_HTML_PATH;
-    }
-}
-function loadSettings() {
-    var promise = new Promise((resolve, reject) => {
-        let json = Cookies.get("bluespoon_setting");
-        if (json == undefined) {
-            reject("Not found.");
-        }
-        var content = JSON.parse(json);
-        resolve(content);
-    });
-    return promise;
-}
-var appKey;
-var clientKey;
-var ncmb = undefined;
-function initalizeNCMB() {
-    if (ncmb) {
-        return ncmb;
-    }
-    let params = libGetParams();
-    appKey = params["ak"];
-    clientKey = params["ck"];
-    if (appKey && clientKey) {
-        ncmb = new NCMB(appKey, clientKey);
-        return ncmb;
-    }
-    appKey = Cookies.get("bs_apikey");
-    clientKey = Cookies.get("bs_clientkey");
-    if (appKey && clientKey) {
-        ncmb = new NCMB(appKey, clientKey);
-        return ncmb;
-    }
-    console.error("COULDN'T FIND AN APP KEY AND AN CLIENT KEY !");
-    return undefined;
-}
-function saveSettings(content) {
-    let json = JSON.stringify(content);
-    Cookies.set("bluespoon_setting", json);
-}

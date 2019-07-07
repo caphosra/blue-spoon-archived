@@ -14,13 +14,6 @@
         <script src="https://cdn.jsdelivr.net/npm/ncmb@3.0.0/ncmb.min.js" integrity="sha256-qYO7lh8vjj3OnEYt0Wt2Din54pQ96nFb7rnOXUkmrLA=" crossorigin="anonymous"></script>
 
         <script src="./tsc.js"></script>
-
-        <script text="text/javascript">
-            window.onload = function() {
-                userInitNCMB();
-                userUpdateBookList();
-            };
-        </script>
     </head>
 
     <body>
@@ -32,8 +25,8 @@
             <!-- Output the book list here -->
         </output>
 
-        <button class="btn" onclick="userUpdateBookList()">Reload book list</button>
+        <button id="update_list_button" class="btn">Reload book list</button>
 
-        <button class="btn" onclick="userMakeBook()">Add book list</button>
+        <button id="add_book_button" class="btn">Add book list</button>
     </body>
 </html>
