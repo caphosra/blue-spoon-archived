@@ -1,42 +1,64 @@
-function userMakeBook(){
-    var book_name = window.prompt("Input your book name", "");
+module BookList{
+    const update_list_button_id = "update_list_button";
+    const add_book_button_id = "add_book_button";
 
-    if(book_name){
-        var bookList = makeBookListInstance(book_name);
-        if(bookList){
-            bookList.save();
+    export function MakeBook(){
+        var book_name = window.prompt("Input your book name", "");
+    
+        if(book_name){
+            let newRecord = NCMBWrap.CreateNewData("BookList") as IBookItem;
+            newRecord.name = book_name;
+            newRecord.save();
+        }
+    
+        UpdateBookList();
+    }
+    
+    export function UpdateBookList(){
+        let bookListTable = NCMBWrap.DataStore("BookList");
+    
+        bookListTable.fetchAll()
+            .then(function(res){
+                let tableElement = document.getElementById("book_list");
+    
+                if(tableElement){
+                    tableElement.innerHTML = "";
+                    
+                    for(let item of res){
+                        let bookItem = item as IBookItem;
+
+                        let clickEvent = `PageLocation.JumpToPageWithBookName('${PageLocation.book_item}', '${bookItem.name}');`;
+                        tableElement.innerHTML += `<a href="#" name="book_item_link" onclick="${clickEvent}">${bookItem.name}</a><br/>`;
+                    }
+                }
+            })
+            .catch(function(err){
+                console.error(err);
+            });
+    }
+
+    export module Event{
+        export function OnLoad(){
+            let update_list_button = document.getElementById(update_list_button_id);
+            if(update_list_button){
+                update_list_button.onclick = OnUpdateListButtonClicked;
+            }
+
+            let add_book_button = document.getElementById(add_book_button_id);
+            if(add_book_button){
+                add_book_button.onclick = OnAddBookButtonClicked;
+            }
+
+            UpdateBookList();
+        }
+
+        function OnUpdateListButtonClicked(){
+            UpdateBookList();
+        }
+        function OnAddBookButtonClicked(){
+            MakeBook();
         }
     }
-
-    userUpdateBookList();
 }
 
-function userUpdateBookList(){
-    let bookListTable = getDataTable("BookList");
-    
-    if(!bookListTable){
-        return;
-    }
-
-    bookListTable.fetchAll()
-        .then(function(res){
-            let tableElement = document.getElementById("book_list");
-
-            if(tableElement != null){
-                tableElement.innerHTML = "";
-
-                for(let i = 0; i < res.length; i++){
-                    let bookItem = res[i] as IBookItem;
-
-                    tableElement.innerHTML += `<a href="#" onclick="userOpenBook('${bookItem.name}');">${bookItem.name}</a><br/>`;
-                }
-            }
-        })
-        .catch(function(err){
-            console.error(err);
-        });
-}
-
-function userOpenBook(book_name: string){
-    location.href = `./book_item.html?ak=${appKey}&ck=${clientKey}&bn=${book_name}`;
-}
+OnLoadWrap.AddToOnLoadIf(PageLocation.book_list, BookList.Event.OnLoad);

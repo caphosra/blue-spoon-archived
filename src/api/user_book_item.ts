@@ -1,20 +1,27 @@
-var global_book_name: string | undefined = undefined;
+module BookItem{
+    export let book_name: string | undefined = undefined;
 
-function userInitBookName(){
-    let params = libGetParams();
-    let book_name = params["bn"];
+    function InitBookName(){
+        let params = HTMLQuery.GetParams();
+        book_name = params["bn"];
 
-    if(!book_name){
-        console.error("BOOK NAME IS NULL !");
+        if(!book_name){
+            console.error("BOOK NAME IS NULL !");
+        }
     }
-    else{
-        global_book_name = book_name;
+    function SetBookNameToElement(){
+        let elem = document.getElementById("book_name_content");
+        if(elem && book_name){
+            elem.innerHTML = book_name;
+        }
+    }
+
+    export module Event{
+        export function OnLoad(){
+            InitBookName();
+            SetBookNameToElement();
+        }
     }
 }
 
-function userSetBookNameToElement(){
-    let elem = document.getElementById("book_name_content");
-    if(elem && global_book_name){
-        elem.innerHTML = global_book_name;
-    }
-}
+OnLoadWrap.AddToOnLoadIf(PageLocation.book_item, BookItem.Event.OnLoad);

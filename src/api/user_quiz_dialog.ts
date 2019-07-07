@@ -183,8 +183,8 @@ module QuizDialog{
     }
 
     async function GetProblems() {
-        if(ncmb && global_book_name){
-            let problemClass = ncmb.DataStore(global_book_name) as IDataTableMain;
+        if(BookItem.book_name){
+            let problemClass = NCMBWrap.DataStore(BookItem.book_name);
     
             if(problemClass){
                 await problemClass.fetchAll()
