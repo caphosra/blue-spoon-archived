@@ -2,9 +2,15 @@
     "compilerOptions": {
         "strict": true,
         "outFile": "target/tsc.js",
-        "target": "es6"
+        "target": "es6",
+        "removeComments": true
     },
     "include": [
+        // Build ahead
+        "src/modules/page-location.ts",
+        "src/wrapper/onload-wrap.ts",
+        "src/wrapper/ncmb-wrap.ts",
+        
         "src/**/*"
     ]
 }

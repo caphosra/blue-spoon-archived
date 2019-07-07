@@ -1,5 +1,5 @@
 function getAllProblems(book_name: string): Array<IProblemItem> | undefined{
-    let dataTable = getDataTable(book_name);
+    let dataTable = NCMBWrap.DataStore(book_name);
     let allProblems: Array<IProblemItem> | undefined = undefined;
 
     if(dataTable != undefined){
@@ -16,7 +16,7 @@ function getAllProblems(book_name: string): Array<IProblemItem> | undefined{
 }
 
 function addProblem(book_name: string, problem: string, answer: string){
-    let dataTableItem = makeDataTableInstance(book_name);
+    let dataTableItem = NCMBWrap.CreateNewData(book_name);
 
     if(dataTableItem != undefined){
         dataTableItem
