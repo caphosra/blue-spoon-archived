@@ -6,65 +6,97 @@ trigger:
       - master
       - refs/tags/*
 
-pool:
-  vmImage: 'ubuntu-latest'
-
 variables:
   nodeToolVersion: '12.5.0'
   outFile: 'target'
 
-steps:
-- script: |
-    mkdir ~/.ssh && mv $DOWNLOADSECUREFILE_SECUREFILEPATH ~/.ssh/id_rsa
-    chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa
-    ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
-    mkdir target
-    pushd target > /dev/null
-    git clone git@github.com:capra314cabra/blue-spoon.git .
-    git checkout gh-pages
-    popd > /dev/null
-  displayName: 'Setup git repo'
-  condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
+stages:
+- stage: Build
+  displayName: 'Build Stage'
+  jobs: 
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: $(nodeToolVersion)
+        displayName: 'Install node js'
 
-- task: NodeTool@0
-  inputs:
-    versionSpec: $(nodeToolVersion)
-  displayName: 'Install node js'
+      - script: npm install -g typescript
+        displayName: 'Install typescript compiler'
 
-- script: npm install -g typescript
-  displayName: 'Install typescript compiler'
+      - script: mkdir target
+        displayName: 'Make target dir'
 
-- script: tsc
-  displayName: 'Compile typescript codes'
+      - script: tsc
+        displayName: 'Compile typescript codes'
 
-- script: |
-    pushd tools > /dev/null
-    chmod +x bake.sh
-    popd > /dev/null
-    ./tools/bake.sh
-  displayName: 'Bake files'
+      - script: |
+          pushd tools > /dev/null
+          chmod +x bake.sh
+          popd > /dev/null
+          ./tools/bake.sh
+        displayName: 'Bake files'
 
-- script: |
-    pushd target > /dev/null
-    pwd
-    git config --local user.name "Bluespoon Bot"
-    git config --local user.email "bluespoonbot@capra314cabra.github.io"
-    git add .
-    git commit -m "Auto Publishing GitHub Pages From '$(Build.SourceBranch)'"
-    popd > /dev/null
-  displayName: 'Commit compiled changes'
-  condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
+      - task: CopyFiles@2
+        inputs:
+          Contents: './target/**'
+          TargetFolder: $(Build.ArtifactStagingDirectory)
+      
+      - task: PublishBuildArtifacts@1
+        inputs:
+          pathToPublish: $(Build.ArtifactStagingDirectory)
+          artifactName: BuildOutput
+- stage: deploy
+  displayName: 'Deploy Stage'
+  dependsOn: Build
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+  jobs:
+  - deployment: 'Deploy'
+    displayName: 'Deploy'
+    environment: 'development'
+    pool:
+      vmImage: 'ubuntu-latest'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - script: |
+                mkdir ~/.ssh && mv $DOWNLOADSECUREFILE_SECUREFILEPATH ~/.ssh/id_rsa
+                chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa
+                ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+                mkdir target
+                pushd target > /dev/null
+                git clone git@github.com:capra314cabra/blue-spoon.git .
+                git checkout gh-pages
+                popd > /dev/null
+              displayName: 'Setup git repo'
+
+            - task: CopyFiles@2
+              inputs:
+                Contents: '$(Build.ArtifactStagingDirectory)/**'
+                TargetFolder: './target'
+                OverWrite: True
+
+            - script: |
+                pushd target > /dev/null
+                pwd
+                git config --local user.name "Bluespoon Bot"
+                git config --local user.email "bluespoonbot@capra314cabra.github.io"
+                git add .
+                git commit -m "Auto Publishing GitHub Pages From '$(Build.SourceBranch)'"
+                popd > /dev/null
+              displayName: 'Commit compiled changes'
     
+            - task: DownloadSecureFile@1
+              inputs:
+                secureFile: bs_github_rsa
+              displayName: 'Get the deploy key'
 
-- task: DownloadSecureFile@1
-  inputs:
-    secureFile: bs_github_rsa
-  displayName: 'Get the deploy key'
-  condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
-
-- script: |
-    pushd target > /dev/null
-    git push origin gh-pages
-    popd > /dev/null
-  displayName: 'Publish all'
-  condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
+            - script: |
+                pushd target > /dev/null
+                git push origin gh-pages
+                popd > /dev/null
+              displayName: 'Publish all'
