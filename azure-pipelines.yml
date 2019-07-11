@@ -42,7 +42,8 @@ stages:
 
       - task: CopyFiles@2
         inputs:
-          contents: '$(System.DefaultWorkingDirectory)/target/**'
+          sourceFolder: '$(System.DefaultWorkingDirectory)/target'
+          contents: '**'
           targetFolder: $(Build.ArtifactStagingDirectory)
         displayName: 'Copy to ArtifactStagingDirectory'
       
@@ -84,7 +85,8 @@ stages:
 
             - task: CopyFiles@2
               inputs:
-                contents: '$(System.DefaultWorkingDirectory)/build/**'
+                sourceFolder: '$(System.DefaultWorkingDirectory)/build'
+                contents: '**'
                 targetFolder: '$(System.DefaultWorkingDirectory)/target'
                 overWrite: True
               displayName: 'Copy to Git repos dir'
