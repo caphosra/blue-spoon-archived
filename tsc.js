@@ -7,6 +7,44 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var PageLocation;
+(function (PageLocation) {
+    PageLocation.book_item = "./book_item.html";
+    PageLocation.book_list = "./book_list.html";
+    PageLocation.index = "./index.html";
+    PageLocation.cannnot_connect = "./cannnot_connect.html";
+    let current_file;
+    function GetCurrentFile() {
+        if (!current_file) {
+            let filename_with_query = window.location.pathname.split("/").pop();
+            if (filename_with_query) {
+                let file_name = filename_with_query.split("?").shift();
+                current_file = `./${file_name}`;
+            }
+        }
+        if (current_file) {
+            return current_file;
+        }
+        else {
+            throw new TypeError("CURRENT FILE NAME IS NULL !");
+        }
+    }
+    PageLocation.GetCurrentFile = GetCurrentFile;
+    function JumpToPage(url) {
+        location.href =
+            `${url}?ak=${NCMBWrap.API_key}&ck=${NCMBWrap.client_key}`;
+    }
+    PageLocation.JumpToPage = JumpToPage;
+    function JumpToPageWithBookName(url, book_name) {
+        location.href =
+            `${url}?ak=${NCMBWrap.API_key}&ck=${NCMBWrap.client_key}&bn=${book_name}`;
+    }
+    PageLocation.JumpToPageWithBookName = JumpToPageWithBookName;
+    function JumpToPageWithoutInfo(url) {
+        location.href = url;
+    }
+    PageLocation.JumpToPageWithoutInfo = JumpToPageWithoutInfo;
+})(PageLocation || (PageLocation = {}));
 var OnLoadWrap;
 (function (OnLoadWrap) {
     let functions = [];
@@ -65,76 +103,6 @@ var NCMBWrap;
     }
 })(NCMBWrap || (NCMBWrap = {}));
 OnLoadWrap.AddToOnLoad(NCMBWrap.Initalize);
-var ErrorMessages;
-(function (ErrorMessages) {
-    ErrorMessages.element_not_found = "THERE ARE NO CONTENTS WHICH THIS JOB REQUIRES !";
-    ErrorMessages.unexpected = "UNEXPECTED ERROR !";
-})(ErrorMessages || (ErrorMessages = {}));
-var HTMLQuery;
-(function (HTMLQuery) {
-    let params = undefined;
-    function GetParams() {
-        if (params) {
-            return params;
-        }
-        params = {};
-        let query_text = location.search;
-        query_text = query_text.substring(1);
-        let query = query_text.split("&");
-        for (var q of query) {
-            let params_array = q.split("=");
-            if (params_array.length == 2) {
-                let param_name = params_array[0];
-                let param_value = params_array[1];
-                params[param_name] = param_value;
-            }
-            else {
-                console.error("PARAMS ARE BAD");
-                return params;
-            }
-        }
-        return params;
-    }
-    HTMLQuery.GetParams = GetParams;
-})(HTMLQuery || (HTMLQuery = {}));
-var PageLocation;
-(function (PageLocation) {
-    PageLocation.book_item = "./book_item.html";
-    PageLocation.book_list = "./book_list.html";
-    PageLocation.index = "./index.html";
-    PageLocation.cannnot_connect = "./cannnot_connect.html";
-    let current_file;
-    function GetCurrentFile() {
-        if (!current_file) {
-            let filename_with_query = window.location.pathname.split("/").pop();
-            if (filename_with_query) {
-                let file_name = filename_with_query.split("?").shift();
-                current_file = `./${file_name}`;
-            }
-        }
-        if (current_file) {
-            return current_file;
-        }
-        else {
-            throw new TypeError("CURRENT FILE NAME IS NULL !");
-        }
-    }
-    PageLocation.GetCurrentFile = GetCurrentFile;
-    function JumpToPage(url) {
-        location.href =
-            `${url}?ak=${NCMBWrap.API_key}&ck=${NCMBWrap.client_key}`;
-    }
-    PageLocation.JumpToPage = JumpToPage;
-    function JumpToPageWithBookName(url, book_name) {
-        location.href =
-            `${url}?ak=${NCMBWrap.API_key}&ck=${NCMBWrap.client_key}&bn=${book_name}`;
-    }
-    PageLocation.JumpToPageWithBookName = JumpToPageWithBookName;
-    function JumpToPageWithoutInfo(url) {
-        location.href = url;
-    }
-    PageLocation.JumpToPageWithoutInfo = JumpToPageWithoutInfo;
-})(PageLocation || (PageLocation = {}));
 var BookItem;
 (function (BookItem) {
     BookItem.book_name = undefined;
@@ -373,37 +341,38 @@ var QuizDialog;
         element.style.display = "none";
     }
 })(QuizDialog || (QuizDialog = {}));
-function getAllProblems(book_name) {
-    let dataTable = NCMBWrap.DataStore(book_name);
-    let allProblems = undefined;
-    if (dataTable != undefined) {
-        dataTable.fetchAll()
-            .then(function (res) {
-            allProblems = res.map((dataTable) => dataTable);
-        })
-            .catch(function (err) {
-            console.error(err);
-        });
+var ErrorMessages;
+(function (ErrorMessages) {
+    ErrorMessages.element_not_found = "THERE ARE NO CONTENTS WHICH THIS JOB REQUIRES !";
+    ErrorMessages.unexpected = "UNEXPECTED ERROR !";
+})(ErrorMessages || (ErrorMessages = {}));
+var HTMLQuery;
+(function (HTMLQuery) {
+    let params = undefined;
+    function GetParams() {
+        if (params) {
+            return params;
+        }
+        params = {};
+        let query_text = location.search;
+        query_text = query_text.substring(1);
+        let query = query_text.split("&");
+        for (var q of query) {
+            let params_array = q.split("=");
+            if (params_array.length == 2) {
+                let param_name = params_array[0];
+                let param_value = params_array[1];
+                params[param_name] = param_value;
+            }
+            else {
+                console.error("PARAMS ARE BAD");
+                return params;
+            }
+        }
+        return params;
     }
-    return allProblems;
-}
-function addProblem(book_name, problem, answer) {
-    let dataTableItem = NCMBWrap.CreateNewData(book_name);
-    if (dataTableItem != undefined) {
-        dataTableItem
-            .set("problem", problem)
-            .set("answer", answer)
-            .set("solve_count", "0")
-            .set("wrong_count", "0")
-            .save()
-            .then(function (res) {
-            console.log("Added problem");
-        })
-            .catch(function (err) {
-            console.error(err);
-        });
-    }
-}
+    HTMLQuery.GetParams = GetParams;
+})(HTMLQuery || (HTMLQuery = {}));
 var RandomSort;
 (function (RandomSort) {
     function Do(list) {
