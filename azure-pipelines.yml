@@ -42,13 +42,15 @@ stages:
 
       - task: CopyFiles@2
         inputs:
-          Contents: './target/**'
-          TargetFolder: $(Build.ArtifactStagingDirectory)
+          contents: '$(System.DefaultWorkingDirectory)/target/**'
+          targetFolder: $(Build.ArtifactStagingDirectory)
+        displayName: 'Copy to ArtifactStagingDirectory'
       
       - task: PublishBuildArtifacts@1
         inputs:
           pathToPublish: $(Build.ArtifactStagingDirectory)
           artifactName: BuildOutput
+        displayName: 'Publish artifact'
 - stage: deploy
   displayName: 'Deploy Stage'
   dependsOn: Build
@@ -74,11 +76,18 @@ stages:
                 popd > /dev/null
               displayName: 'Setup git repo'
 
+            - task: DownloadBuildArtifacts@0
+              inputs:
+                artifactName: 'BuildOutput'
+                downloadPath: '$(System.DefaultWorkingDirectory)/build'
+              displayName: 'Download artifact'
+
             - task: CopyFiles@2
               inputs:
-                Contents: '$(Build.ArtifactStagingDirectory)/**'
-                TargetFolder: './target'
-                OverWrite: True
+                contents: '$(System.DefaultWorkingDirectory)/build/**'
+                targetFolder: '$(System.DefaultWorkingDirectory)/target'
+                overWrite: True
+              displayName: 'Copy to Git repos dir'
 
             - script: |
                 pushd target > /dev/null
