@@ -80,12 +80,12 @@ stages:
             - task: DownloadBuildArtifacts@0
               inputs:
                 artifactName: 'BuildOutput'
-                downloadPath: '$(System.DefaultWorkingDirectory)/build'
+                downloadPath: '$(System.DefaultWorkingDirectory)'
               displayName: 'Download artifact'
 
             - task: CopyFiles@2
               inputs:
-                sourceFolder: '$(System.DefaultWorkingDirectory)/build'
+                sourceFolder: '$(System.DefaultWorkingDirectory)/BuildOutput'
                 contents: '**'
                 targetFolder: '$(System.DefaultWorkingDirectory)/target'
                 overWrite: True
