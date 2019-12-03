@@ -7,7 +7,7 @@ trigger:
       - refs/tags/*
 
 variables:
-  nodeToolVersion: '12.5.0'
+  nodeToolVersion: '12.10.0'
   outFile: 'target'
 
 stages:
@@ -24,28 +24,35 @@ stages:
           versionSpec: $(nodeToolVersion)
         displayName: 'Install node js'
 
-      - script: npm install -g typescript
-        displayName: 'Install typescript compiler'
+      - script: npm install
+        displayName: 'Set up environment'
 
-      - script: mkdir target
-        displayName: 'Make target dir'
-
-      - script: tsc
-        displayName: 'Compile typescript codes'
-
-      - script: |
-          pushd tools > /dev/null
-          chmod +x bake.sh
-          popd > /dev/null
-          ./tools/bake.sh
-        displayName: 'Bake files'
+      - script: npx webpack
+        displayName: 'Compile all codes'
 
       - task: CopyFiles@2
         inputs:
-          sourceFolder: '$(System.DefaultWorkingDirectory)/target'
+          sourceFolder: '$(System.DefaultWorkingDirectory)/dist'
           contents: '**'
           targetFolder: $(Build.ArtifactStagingDirectory)
-        displayName: 'Copy to ArtifactStagingDirectory'
+        displayName: 'Copy codes to ArtifactStagingDirectory'
+
+      - task: CopyFiles@2
+        inputs:
+          sourceFolder: '$(System.DefaultWorkingDirectory)/img'
+          contents: '**'
+          targetFolder: $(Build.ArtifactStagingDirectory)
+        displayName: 'Copy images to ArtifactStagingDirectory'
+
+      - task: CopyFiles@2
+        inputs:
+          sourceFolder: '$(System.DefaultWorkingDirectory)/pages'
+          contents: '**'
+          targetFolder: $(Build.ArtifactStagingDirectory)
+        displayName: 'Copy pages to ArtifactStagingDirectory'
+      
+      - script: cp ./index.html $(Build.ArtifactStagingDirectory)/index.html
+        displayName: 'Copy index.html'
       
       - task: PublishBuildArtifacts@1
         inputs:
@@ -55,7 +62,7 @@ stages:
 - stage: deploy
   displayName: 'Deploy Stage'
   dependsOn: Build
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'master'))
   jobs:
   - deployment: 'Deploy'
     displayName: 'Deploy'
