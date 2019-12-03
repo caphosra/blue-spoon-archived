@@ -1,4 +1,4 @@
-module HTMLQuery{
+export module HTMLQuery{
     let params: {[key: string]: string} | undefined = undefined;
 
     export function GetParams(): { [key: string]: string; } {
