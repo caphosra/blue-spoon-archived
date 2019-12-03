@@ -1,3 +1,0 @@
-#!/bin/bash
-
-./bake.sh

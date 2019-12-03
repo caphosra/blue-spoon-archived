@@ -1,16 +1,15 @@
 {
     "compilerOptions": {
-        "strict": true,
-        "outFile": "target/tsc.js",
+        "allowJs": true,
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "noImplicitAny": false,
+        "module": "commonjs",
         "target": "es6",
-        "removeComments": true
-    },
-    "include": [
-        // Build ahead
-        "src/library/page-location.ts",
-        "src/wrapper/onload-wrap.ts",
-        "src/wrapper/ncmb-wrap.ts",
-        
-        "src/**/*"
-    ]
+        "jsx": "react",
+        "baseUrl": "./src",
+        "paths": {
+            "ncmb": ["@types/ncmb/ncmb.d.ts"]
+        }
+    }
 }

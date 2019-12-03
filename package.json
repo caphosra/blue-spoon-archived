@@ -1,0 +1,36 @@
+{
+  "name": "bluespoon",
+  "version": "1.0.0",
+  "description": "This app support your studying a lot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/capra314cabra/blue-spoon.git"
+  },
+  "author": "capra314cabra",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/capra314cabra/blue-spoon/issues"
+  },
+  "homepage": "https://github.com/capra314cabra/blue-spoon#readme",
+  "devDependencies": {
+    "@types/node": "^12.12.12",
+    "@types/react": "^16.9.11",
+    "@types/react-dom": "^16.9.4",
+    "@types/webpack": "^4.41.0",
+    "source-map-loader": "^0.2.4",
+    "ts-loader": "^6.2.1",
+    "ts-node": "^8.5.2",
+    "typescript": "^3.7.2",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "dependencies": {
+    "ncmb": "^3.0.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  }
+}
