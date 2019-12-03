@@ -34,21 +34,21 @@ stages:
         inputs:
           sourceFolder: '$(System.DefaultWorkingDirectory)/dist'
           contents: '**'
-          targetFolder: $(Build.ArtifactStagingDirectory)
+          targetFolder: '$(Build.ArtifactStagingDirectory)/dist'
         displayName: 'Copy codes to ArtifactStagingDirectory'
 
       - task: CopyFiles@2
         inputs:
           sourceFolder: '$(System.DefaultWorkingDirectory)/img'
           contents: '**'
-          targetFolder: $(Build.ArtifactStagingDirectory)
+          targetFolder: '$(Build.ArtifactStagingDirectory)/img'
         displayName: 'Copy images to ArtifactStagingDirectory'
 
       - task: CopyFiles@2
         inputs:
           sourceFolder: '$(System.DefaultWorkingDirectory)/pages'
           contents: '**'
-          targetFolder: $(Build.ArtifactStagingDirectory)
+          targetFolder: '$(Build.ArtifactStagingDirectory)/pages'
         displayName: 'Copy pages to ArtifactStagingDirectory'
       
       - script: cp ./index.html $(Build.ArtifactStagingDirectory)/index.html
