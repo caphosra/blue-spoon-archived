@@ -1,4 +1,4 @@
-interface IBook{
+interface IBook extends INCMBDataItem{
     name: string;
 }
 
