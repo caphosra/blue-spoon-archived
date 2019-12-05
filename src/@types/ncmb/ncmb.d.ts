@@ -1,7 +1,13 @@
 interface INCMB{
     DataStore(name: string): any;
-    User: any;
+    User: INCMBUser;
     Acl: any;
+}
+
+interface INCMBUser{
+    getCurrentUser(): any;
+    login(username: string, password: string): Promise<any>;
+    logout(): Promise<any>;
 }
 
 interface INCMBDataItem{
