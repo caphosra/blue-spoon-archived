@@ -35,6 +35,14 @@ export class BookListView extends React.Component<BookListViewProps, BookListVie
         let onEditButtonCliecked = (book: IBook) => {
             location.href = `./edit-book.html?name=${book.name}`;
         };
+        let onDeleteButtonClicked = (book: IBook) => {
+            let yes = window.confirm("YOU REALY WANT TO DELETE?");
+            if(yes){
+                book.delete().then((res) => {
+                    this.initBookList();
+                });
+            }
+        };
         let onAddButtonClicked = () => {
             let name = window.prompt("New book name");
             let Book = this.props.quizServer.ncmb.DataStore("books_table");
@@ -59,6 +67,7 @@ export class BookListView extends React.Component<BookListViewProps, BookListVie
                         <h5 className="card-title">{book.name}</h5>
                         <button type="button" className="btn btn-primary" onClick={() => onChallengeButtonCliecked(book)}>Challenge</button>
                         <button type="button" className="btn btn-success" onClick={() => onEditButtonCliecked(book)}>Edit</button>
+                        <button type="button" className="btn btn-danger" onClick={() => onDeleteButtonClicked(book)}>Delete</button>
                     </div>
                 </div>
             );
