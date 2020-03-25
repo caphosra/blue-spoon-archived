@@ -1,6 +1,6 @@
 # Blue Spoon
 
-[![Build Status](https://dev.azure.com/capra314cabra/blue-spoon/_apis/build/status/capra314cabra.blue-spoon?branchName=master)](https://dev.azure.com/capra314cabra/blue-spoon/_build/latest?definitionId=3&branchName=master)
+[![CI](https://github.com/capra314cabra/blue-spoon/workflows/CI/badge.svg)](https://github.com/capra314cabra/blue-spoon/actions)
 [![GitHub package.json version](https://img.shields.io/github/package-json/v/capra314cabra/blue-spoon)](https://capra314cabra.github.io/blue-spoon/index.html)
 
 <p align="center"><img width=200 src="https://github.com/capra314cabra/blue-spoon/blob/master/img/logo.svg" /></p>
