@@ -1,0 +1,27 @@
+name: CD
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 12
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+    - name: Install dependencies
+      run: npm install
+    - name: Build all
+      run: npx webpack
+    - name: Copy files
+      run: |
+        mkdir builds
+        cp ./dist/* ./builds
+        cp ./img/* ./builds
+        cp ./pages/* ./builds
+        cp ./index.html ./builds/index.html
