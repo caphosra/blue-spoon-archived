@@ -14,7 +14,7 @@ interface QuizViewState{
 }
 
 export class QuizView extends React.Component<QuizViewProps, QuizViewState> {
-    quiz: IQuiz[];
+    quiz: IQuiz[] = [];
     correct: number = 0;
     wrong: number = 0;
     
