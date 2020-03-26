@@ -1,6 +1,6 @@
 {
   "name": "bluespoon",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "This app support your studying a lot",
   "main": "index.js",
   "scripts": {
