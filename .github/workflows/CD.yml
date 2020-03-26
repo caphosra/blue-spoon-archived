@@ -14,32 +14,32 @@ jobs:
         node-version: [12]
 
     steps:
-    - name: Get tag
-      id: tag
-      uses: dawidd6/action-get-tag@master
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ node-version }}
-    - name: Install dependencies
-      run: npm install
-    - name: Build all
-      run: npx webpack
-    - name: Copy files
-      run: |
-        mkdir public
-        cp ./dist/* ./public
-        cp ./img/* ./public
-        cp ./pages/* ./public
-        cp ./index.html ./public/index.html
-    - name: Deploy to gh-pages
-      if: success()
-      uses: crazy-max/ghaction-github-pages@v1
-      with:
-        target_branch: gh-pages
-        build_dir: ./public
-        keep_history: true
-        commit_message: Auto Deployed From ${{ steps.tag.outputs.tag }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get tag
+        id: tag
+        uses: dawidd6/action-get-tag@master
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ node-version }}
+      - name: Install dependencies
+        run: npm install
+      - name: Build all
+        run: npx webpack
+      - name: Copy files
+        run: |
+          mkdir public
+          cp ./dist/* ./public
+          cp ./img/* ./public
+          cp ./pages/* ./public
+          cp ./index.html ./public/index.html
+      - name: Deploy to gh-pages
+        if: success()
+        uses: crazy-max/ghaction-github-pages@v1
+        with:
+          target_branch: gh-pages
+          build_dir: ./public
+          keep_history: true
+          commit_message: Auto Deployed From ${{ steps.tag.outputs.tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

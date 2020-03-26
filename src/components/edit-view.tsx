@@ -3,18 +3,18 @@ import * as React from "react"
 import { NCMBQuizServer } from "../api/ncmb-quiz-server";
 import { QuizResultView } from "./quiz-result-view";
 
-interface EditViewProps{
+interface EditViewProps {
     name: string;
     quizServer: NCMBQuizServer;
 }
 
-interface EditViewState{
+interface EditViewState {
     quiz: IQuiz[];
     isLoading: boolean;
 }
 
 export class EditView extends React.Component<EditViewProps, EditViewState> {
-    constructor(props: EditViewProps){
+    constructor(props: EditViewProps) {
         super(props);
         this.state = {
             quiz: [],
@@ -23,7 +23,7 @@ export class EditView extends React.Component<EditViewProps, EditViewState> {
         this.reloadView();
     }
 
-    reloadView(){
+    reloadView() {
         this.props.quizServer.getQuiz(this.props.name).then((res) => {
             this.setState({
                 quiz: res,
@@ -33,7 +33,7 @@ export class EditView extends React.Component<EditViewProps, EditViewState> {
     }
 
     render() {
-        if(this.state.isLoading){
+        if (this.state.isLoading) {
             return (
                 <div>Now loading...</div>
             );
@@ -59,9 +59,9 @@ export class EditView extends React.Component<EditViewProps, EditViewState> {
 
         content.push(<button type="button" className="btn btn-success" onClick={onAddButtonClicked}>Add new</button>);
 
-        for(let i = 0; i < this.state.quiz.length; i++){
+        for (let i = 0; i < this.state.quiz.length; i++) {
             let currentQuiz = this.state.quiz[i];
-            
+
             let saveClicked = () => {
                 let problemInput = document.getElementById(`problemInput${i}`) as HTMLInputElement;
                 let problem = problemInput.value;

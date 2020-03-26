@@ -1,19 +1,19 @@
 import * as React from "react"
 
-interface QuizResultViewProps{
+interface QuizResultViewProps {
     correct: number;
     wrong: number;
 }
 
-interface QuizResultViewState{
-    
+interface QuizResultViewState {
+
 }
 
 export class QuizResultView extends React.Component<QuizResultViewProps, QuizResultViewState> {
-    constructor(props: QuizResultViewProps){
+    constructor(props: QuizResultViewProps) {
         super(props);
         this.state = {
-            
+
         };
     }
 
@@ -28,7 +28,7 @@ export class QuizResultView extends React.Component<QuizResultViewProps, QuizRes
                         <p className="card-text">{this.props.correct}/{this.props.correct + this.props.wrong}</p>
                     </div>
                 </div>
-                <button className="btn btn-primary" onClick={() => {location.href = "./book-list.html";}}>GoBack</button>
+                <button className="btn btn-primary" onClick={() => { location.href = "./book-list.html"; }}>GoBack</button>
             </div>
         );
 

@@ -7,55 +7,55 @@ trigger:
       - refs/tags/*
 
 variables:
-  nodeToolVersion: '12.10.0'
-  outFile: 'target'
+  nodeToolVersion: "12.10.0"
+  outFile: "target"
 
 stages:
-- stage: Build
-  displayName: 'Build Stage'
-  jobs: 
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-      - task: NodeTool@0
-        inputs:
-          versionSpec: $(nodeToolVersion)
-        displayName: 'Install node js'
+  - stage: Build
+    displayName: "Build Stage"
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(nodeToolVersion)
+            displayName: "Install node js"
 
-      - script: npm install
-        displayName: 'Set up environment'
+          - script: npm install
+            displayName: "Set up environment"
 
-      - script: npx webpack
-        displayName: 'Compile all codes'
+          - script: npx webpack
+            displayName: "Compile all codes"
 
-      - task: CopyFiles@2
-        inputs:
-          sourceFolder: '$(System.DefaultWorkingDirectory)/dist'
-          contents: '**'
-          targetFolder: '$(Build.ArtifactStagingDirectory)/dist'
-        displayName: 'Copy codes to ArtifactStagingDirectory'
+          - task: CopyFiles@2
+            inputs:
+              sourceFolder: "$(System.DefaultWorkingDirectory)/dist"
+              contents: "**"
+              targetFolder: "$(Build.ArtifactStagingDirectory)/dist"
+            displayName: "Copy codes to ArtifactStagingDirectory"
 
-      - task: CopyFiles@2
-        inputs:
-          sourceFolder: '$(System.DefaultWorkingDirectory)/img'
-          contents: '**'
-          targetFolder: '$(Build.ArtifactStagingDirectory)/img'
-        displayName: 'Copy images to ArtifactStagingDirectory'
+          - task: CopyFiles@2
+            inputs:
+              sourceFolder: "$(System.DefaultWorkingDirectory)/img"
+              contents: "**"
+              targetFolder: "$(Build.ArtifactStagingDirectory)/img"
+            displayName: "Copy images to ArtifactStagingDirectory"
 
-      - task: CopyFiles@2
-        inputs:
-          sourceFolder: '$(System.DefaultWorkingDirectory)/pages'
-          contents: '**'
-          targetFolder: '$(Build.ArtifactStagingDirectory)/pages'
-        displayName: 'Copy pages to ArtifactStagingDirectory'
-      
-      - script: cp ./index.html $(Build.ArtifactStagingDirectory)/index.html
-        displayName: 'Copy index.html'
-      
-      - task: PublishBuildArtifacts@1
-        inputs:
-          pathToPublish: $(Build.ArtifactStagingDirectory)
-          artifactName: BuildOutput
-        displayName: 'Publish artifact'
+          - task: CopyFiles@2
+            inputs:
+              sourceFolder: "$(System.DefaultWorkingDirectory)/pages"
+              contents: "**"
+              targetFolder: "$(Build.ArtifactStagingDirectory)/pages"
+            displayName: "Copy pages to ArtifactStagingDirectory"
+
+          - script: cp ./index.html $(Build.ArtifactStagingDirectory)/index.html
+            displayName: "Copy index.html"
+
+          - task: PublishBuildArtifacts@1
+            inputs:
+              pathToPublish: $(Build.ArtifactStagingDirectory)
+              artifactName: BuildOutput
+            displayName: "Publish artifact"

@@ -8,7 +8,9 @@
         "jsx": "react",
         "baseUrl": "./src",
         "paths": {
-            "ncmb": ["@types/ncmb/ncmb.d.ts"]
+            "ncmb": [
+                "@types/ncmb/ncmb.d.ts"
+            ]
         }
     }
 }
