@@ -15,7 +15,7 @@ if (currentUser) {
     console.log(`You logged in as ${currentUser.get("userName")}`);
 
     let bookName = HTMLQuery.GetParams();
-    if(bookName["name"]){
+    if (bookName["name"]) {
         ReactDOM.render(
             (
                 <div>
@@ -25,7 +25,7 @@ if (currentUser) {
             mainElement
         );
     }
-    else{
+    else {
         console.error("OMG! I can't find the name of the book.");
         ReactDOM.render(
             (
@@ -37,7 +37,7 @@ if (currentUser) {
         );
     }
 }
-else{
+else {
     ReactDOM.render(
         (
             <div>

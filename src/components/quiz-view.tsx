@@ -3,12 +3,12 @@ import * as React from "react"
 import { NCMBQuizServer } from "../api/ncmb-quiz-server";
 import { QuizResultView } from "./quiz-result-view";
 
-interface QuizViewProps{
+interface QuizViewProps {
     name: string;
     quizServer: NCMBQuizServer;
 }
 
-interface QuizViewState{
+interface QuizViewState {
     currentQuiz: number;
     isLoading: boolean;
 }
@@ -17,8 +17,8 @@ export class QuizView extends React.Component<QuizViewProps, QuizViewState> {
     quiz: IQuiz[] = [];
     correct: number = 0;
     wrong: number = 0;
-    
-    constructor(props: QuizViewProps){
+
+    constructor(props: QuizViewProps) {
         super(props);
         this.state = {
             currentQuiz: 0,
@@ -27,7 +27,7 @@ export class QuizView extends React.Component<QuizViewProps, QuizViewState> {
 
         this.props.quizServer.getQuiz(this.props.name).then((res) => {
             let shuffled = res
-                .map((a) => ({sort: Math.random(), value: a}))
+                .map((a) => ({ sort: Math.random(), value: a }))
                 .sort((a, b) => a.sort - b.sort)
                 .map((a) => a.value);
             this.quiz = shuffled;
@@ -38,23 +38,23 @@ export class QuizView extends React.Component<QuizViewProps, QuizViewState> {
         });
     }
 
-    calcAccuracy(quiz: IQuiz): number{
-        if(quiz.correctCount + quiz.wrongCount == 0){
+    calcAccuracy(quiz: IQuiz): number {
+        if (quiz.correctCount + quiz.wrongCount == 0) {
             return 0;
         }
-        else{
+        else {
             return quiz.correctCount / (quiz.correctCount + quiz.wrongCount) * 100;
         }
     }
 
     render() {
-        if(this.state.isLoading){
+        if (this.state.isLoading) {
             return (
                 <div>Now loading...</div>
             );
         }
 
-        if(this.state.currentQuiz == this.quiz.length){
+        if (this.state.currentQuiz == this.quiz.length) {
             return (
                 <QuizResultView correct={this.correct} wrong={this.wrong} />
             );
@@ -67,7 +67,7 @@ export class QuizView extends React.Component<QuizViewProps, QuizViewState> {
                 this.setState({
                     currentQuiz: this.state.currentQuiz + 1
                 });
-            });  
+            });
         };
         let onWrongButtonCliecked = () => {
             let currentQuizItem: INCMBDataItem = currentQuiz;
@@ -76,13 +76,13 @@ export class QuizView extends React.Component<QuizViewProps, QuizViewState> {
                 this.setState({
                     currentQuiz: this.state.currentQuiz + 1
                 });
-            }); 
+            });
         };
 
         let currentQuiz = this.quiz[this.state.currentQuiz];
 
         let content: JSX.Element[] = [];
-        
+
         content.push(<h5>{this.props.name}</h5>);
 
         content.push(

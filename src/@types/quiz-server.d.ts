@@ -1,8 +1,8 @@
-interface IBook extends INCMBDataItem{
+interface IBook extends INCMBDataItem {
     name: string;
 }
 
-interface IQuiz extends INCMBDataItem{
+interface IQuiz extends INCMBDataItem {
     problem: string;
     answer: string;
 
@@ -10,9 +10,9 @@ interface IQuiz extends INCMBDataItem{
     wrongCount: number;
 }
 
-interface IQuizServer{
+interface IQuizServer {
     getQuizBookNameList(): string[];
     getQuiz(quizBookName: string): IQuiz[];
-    addQuiz(quizBookName:string, quiz: IQuiz): void;
-    deleteQuiz(quizBookName:string, quiz: IQuiz): void;
+    addQuiz(quizBookName: string, quiz: IQuiz): void;
+    deleteQuiz(quizBookName: string, quiz: IQuiz): void;
 }

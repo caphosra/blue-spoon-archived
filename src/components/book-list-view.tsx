@@ -1,16 +1,16 @@
 import * as React from "react"
 import { NCMBQuizServer } from "../api/ncmb-quiz-server"
 
-interface BookListViewProps{
+interface BookListViewProps {
     quizServer: NCMBQuizServer;
 }
 
-interface BookListViewState{
+interface BookListViewState {
     bookNames: IBook[];
 }
 
 export class BookListView extends React.Component<BookListViewProps, BookListViewState> {
-    constructor(props: BookListViewProps){
+    constructor(props: BookListViewProps) {
         super(props);
         this.state = {
             bookNames: []
@@ -19,7 +19,7 @@ export class BookListView extends React.Component<BookListViewProps, BookListVie
         this.initBookList();
     }
 
-    initBookList(){
+    initBookList() {
         this.props.quizServer.getQuizBookNameList()
             .then((res) => {
                 this.setState({
@@ -37,7 +37,7 @@ export class BookListView extends React.Component<BookListViewProps, BookListVie
         };
         let onDeleteButtonClicked = (book: IBook) => {
             let yes = window.confirm("YOU REALY WANT TO DELETE?");
-            if(yes){
+            if (yes) {
                 book.delete().then((res) => {
                     this.initBookList();
                 });
@@ -60,7 +60,7 @@ export class BookListView extends React.Component<BookListViewProps, BookListVie
             <button type="button" className="btn btn-success" onClick={onAddButtonClicked}>Add new</button>
         );
 
-        for(let book of this.state.bookNames) {
+        for (let book of this.state.bookNames) {
             bookCards.push(
                 <div className="card">
                     <div className="card-body">

@@ -21,7 +21,7 @@ if (currentUser) {
         mainElement
     );
 }
-else{
+else {
     ReactDOM.render(
         (
             <div>
