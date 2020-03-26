@@ -65,8 +65,13 @@ export class QuizView extends React.Component<QuizViewProps, QuizViewState> {
             currentQuizItem.set("correctCount", currentQuiz.correctCount + 1).update().then((res) => {
                 this.correct++;
                 this.setState({
-                    currentQuiz: this.state.currentQuiz + 1
+                    currentQuiz: this.state.currentQuiz + 1,
+                    isLoading: false
                 });
+            });
+
+            this.setState({
+                isLoading: true
             });
         };
         let onWrongButtonCliecked = () => {
@@ -74,8 +79,13 @@ export class QuizView extends React.Component<QuizViewProps, QuizViewState> {
             currentQuizItem.set("wrongCount", currentQuiz.wrongCount + 1).update().then((res) => {
                 this.wrong++;
                 this.setState({
-                    currentQuiz: this.state.currentQuiz + 1
+                    currentQuiz: this.state.currentQuiz + 1,
+                    isLoading: false
                 });
+            });
+
+            this.setState({
+                isLoading: true
             });
         };
 
