@@ -11,17 +11,17 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [12]
+        node-version: [12.x]
 
     steps:
       - name: Get tag
         id: tag
         uses: dawidd6/action-get-tag@master
       - uses: actions/checkout@v2
-      - name: Use Node.js ${{ node-version }}
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ node-version }}
+          node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: npm install
       - name: Build all
