@@ -32,6 +32,6 @@
   "dependencies": {
     "ncmb": "^3.0.1",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "react-dom": "^16.13.0"
   }
 }
