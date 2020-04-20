@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/capra314cabra/blue-spoon#readme",
   "devDependencies": {
-    "@types/node": "^13.11.0",
+    "@types/node": "^13.13.1",
     "@types/react": "^16.9.32",
     "@types/react-dom": "^16.9.6",
     "@types/webpack": "^4.41.10",
