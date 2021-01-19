@@ -20,7 +20,7 @@
     "@types/node": "^14.14.20",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
-    "@types/webpack": "^4.41.25",
+    "@types/webpack": "^4.41.26",
     "serialize-javascript": "^5.0.1",
     "source-map-loader": "^2.0.0",
     "ts-loader": "^8.0.14",
