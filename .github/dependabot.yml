@@ -1,0 +1,35 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: monthly
+    time: "20:00"
+  open-pull-requests-limit: 10
+  versioning-strategy: increase-if-necessary
+  ignore:
+  - dependency-name: webpack-cli
+    versions:
+    - "> 4.1.0, < 5"
+  - dependency-name: webpack
+    versions:
+    - 5.30.0
+    - 5.31.0
+  - dependency-name: "@types/node"
+    versions:
+    - 14.14.25
+    - 14.14.37
+  - dependency-name: "@types/react-dom"
+    versions:
+    - 17.0.3
+  - dependency-name: ts-loader
+    versions:
+    - 8.0.16
+    - 8.1.0
+  - dependency-name: "@types/webpack"
+    versions:
+    - 5.28.0
+  - dependency-name: "@types/react"
+    versions:
+    - 17.0.1
+    - 17.0.3
