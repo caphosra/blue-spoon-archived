@@ -17,21 +17,21 @@
   },
   "homepage": "https://github.com/capra314cabra/blue-spoon#readme",
   "devDependencies": {
-    "@types/node": "^13.11.0",
-    "@types/react": "^16.9.32",
-    "@types/react-dom": "^16.9.6",
-    "@types/webpack": "^4.41.10",
-    "serialize-javascript": "^3.0.0",
-    "source-map-loader": "^0.2.4",
-    "ts-loader": "^6.2.2",
-    "ts-node": "^8.8.1",
-    "typescript": "^3.8.3",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11"
+    "@types/node": "^14.14.31",
+    "@types/react": "^17.0.2",
+    "@types/react-dom": "^17.0.1",
+    "@types/webpack": "^4.41.26",
+    "serialize-javascript": "^5.0.1",
+    "source-map-loader": "^2.0.1",
+    "ts-loader": "^8.0.17",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3",
+    "webpack": "^5.24.2",
+    "webpack-cli": "^4.1.0"
   },
   "dependencies": {
-    "ncmb": "^3.0.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "ncmb": "^3.1.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   }
 }
