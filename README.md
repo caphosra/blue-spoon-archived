@@ -1,5 +1,11 @@
 # Blue Spoon
 
+-----
+
+**:warning: THIS PROJECT HAS BEEN ARCHIVED :warning:**
+
+-----
+
 [![CI](https://github.com/capra314cabra/blue-spoon/workflows/CI/badge.svg)](https://github.com/capra314cabra/blue-spoon/actions)
 [![GitHub package.json version](https://img.shields.io/github/package-json/v/capra314cabra/blue-spoon)](https://capra314cabra.github.io/blue-spoon/index.html)
 
